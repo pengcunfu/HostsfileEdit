@@ -10,7 +10,7 @@
           </p>
           <div class="version-info">
             <span class="version">v2.0.0</span>
-            <span class="release-date">发布于 2025年1月</span>
+            <span class="release-date">发布于 2025年1月25日</span>
           </div>
         </div>
       </div>
