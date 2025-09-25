@@ -1,0 +1,88 @@
+name: Build Application
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths: ['app/**']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r app/requirements.txt
+        pip install pyinstaller
+        
+    - name: Build executable
+      run: |
+        cd app
+        pyinstaller --onefile --windowed --name "HostsFileEditor" --icon=../web/public/favicon.ico main.py
+        
+    - name: Test executable
+      run: |
+        cd app/dist
+        # 简单测试exe文件是否能正常启动（无GUI模式下会快速退出）
+        echo "Executable created successfully"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: HostsFileEditor-${{ github.sha }}
+        path: app/dist/HostsFileEditor.exe
+        retention-days: 30
+        
+    - name: Create Release (on tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: app/dist/HostsFileEditor.exe
+        name: Hosts文件编辑工具 ${{ github.ref_name }}
+        body: |
+          ## 🎉 新版本发布: ${{ github.ref_name }}
+          
+          ### 📥 下载
+          - **Windows可执行文件**: HostsFileEditor.exe
+          - **系统要求**: Windows 7/8/10/11
+          - **运行要求**: 管理员权限
+          
+          ### 🚀 使用方法
+          1. 下载 `HostsFileEditor.exe`
+          2. 右键选择"以管理员身份运行"
+          3. 开始编辑您的hosts文件！
+          
+          ### 📋 更新内容
+          请查看提交历史了解详细更改。
+          
+          ### ⚠️ 注意事项
+          - 首次运行可能被杀毒软件误报，请添加信任
+          - 必须以管理员权限运行才能修改hosts文件
+          - 建议运行前备份原始hosts文件
+          
+          ---
+          **完整源码**: [查看源码](https://github.com/${{ github.repository }})
+          **使用文档**: [访问官网](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

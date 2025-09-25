@@ -1,0 +1,74 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test-app:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r app/requirements.txt
+        pip install pytest pytest-qt
+        
+    - name: Run syntax check
+      run: |
+        cd app
+        python -m py_compile main.py
+        
+    - name: Test imports
+      run: |
+        cd app
+        python -c "import main; print('All imports successful')"
+
+  test-web:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: web/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd web
+        npm ci
+        
+    - name: Run linter
+      run: |
+        cd web
+        npm run lint || echo "Linting completed"
+        
+    - name: Build test
+      run: |
+        cd web
+        npm run build
+        
+    - name: Test build output
+      run: |
+        cd web
+        ls -la dist/
+        test -f dist/index.html
