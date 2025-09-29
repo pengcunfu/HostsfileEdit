@@ -2,10 +2,18 @@ name: Build Windows Application
 
 on:
   push:
+    branches: [ master ]
     tags: ['v*']
   pull_request:
+    branches: [ master ]
     paths: ['main.py', 'requirements.txt']
   workflow_dispatch:
+
+# 设置权限
+permissions:
+  contents: write
+  packages: write
+  actions: read
 
 jobs:
   build:
@@ -36,15 +44,19 @@ jobs:
         
     - name: Build executable
       run: |
-        pyinstaller --onefile --windowed --name "HostsFileEditor" main.py
+        pyinstaller --onefile --windowed --name "HostsFileEditor" --add-data "README.md;." main.py
         
     - name: Test executable exists
       run: |
         if (Test-Path "dist\HostsFileEditor.exe") {
           Write-Host "✅ 可执行文件创建成功"
-          Get-Item "dist\HostsFileEditor.exe" | Select-Object Name, Length, LastWriteTime
+          $file = Get-Item "dist\HostsFileEditor.exe"
+          Write-Host "文件名: $($file.Name)"
+          Write-Host "文件大小: $([math]::Round($file.Length/1MB, 2)) MB"
+          Write-Host "创建时间: $($file.LastWriteTime)"
         } else {
           Write-Error "❌ 可执行文件创建失败"
+          Get-ChildItem -Recurse
           exit 1
         }
         
@@ -100,3 +112,51 @@ jobs:
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+  # 添加一个简单的测试作业来验证工作流是否运行
+  test:
+    runs-on: windows-latest
+    if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Test Python syntax
+      run: |
+        python -m py_compile main.py
+        Write-Host "✅ Python语法检查通过"
+        
+    - name: Test imports
+      run: |
+        python -c "
+        try:
+            import sys
+            import os
+            import re
+            import subprocess
+            print('✅ 标准库导入成功')
+        except ImportError as e:
+            print(f'❌ 标准库导入失败: {e}')
+            sys.exit(1)
+        "
+        
+    - name: Install and test PySide6
+      run: |
+        pip install -r requirements.txt
+        python -c "
+        try:
+            from PySide6.QtWidgets import QApplication
+            from PySide6.QtCore import QStringListModel, Qt
+            from PySide6.QtGui import QFont
+            print('✅ PySide6导入成功')
+        except ImportError as e:
+            print(f'❌ PySide6导入失败: {e}')
+            import sys
+            sys.exit(1)
+        "
