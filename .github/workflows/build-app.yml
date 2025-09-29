@@ -49,13 +49,13 @@ jobs:
     - name: Test executable exists
       run: |
         if (Test-Path "dist\HostsFileEditor.exe") {
-          Write-Host "✅ 可执行文件创建成功"
+          Write-Host "Executable created successfully"
           $file = Get-Item "dist\HostsFileEditor.exe"
-          Write-Host "文件名: $($file.Name)"
-          Write-Host "文件大小: $([math]::Round($file.Length/1MB, 2)) MB"
-          Write-Host "创建时间: $($file.LastWriteTime)"
+          Write-Host "File name: $($file.Name)"
+          Write-Host "File size: $([math]::Round($file.Length/1MB, 2)) MB"
+          Write-Host "Created: $($file.LastWriteTime)"
         } else {
-          Write-Error "❌ 可执行文件创建失败"
+          Write-Error "Executable creation failed"
           Get-ChildItem -Recurse
           exit 1
         }
@@ -88,11 +88,11 @@ jobs:
           3. 开始编辑您的hosts文件！
           
           ### ✨ 主要功能
-          - 🎨 现代化GUI界面（基于PySide6）
-          - 🔄 双重编辑模式（文本编辑 + 按条编辑）
-          - 🛡️ 智能权限检测和安全保护
-          - 🔧 便民工具集（文件定位、记事本集成、环境变量）
-          - ✅ IP地址格式验证
+          - 现代化GUI界面（基于PySide6）
+          - 双重编辑模式（文本编辑 + 按条编辑）
+          - 智能权限检测和安全保护
+          - 便民工具集（文件定位、记事本集成、环境变量）
+          - IP地址格式验证
           
           ### ⚠️ 重要提醒
           - **必须以管理员权限运行**才能修改hosts文件
@@ -107,13 +107,13 @@ jobs:
           
           ---
           
-          **感谢使用Hosts文件编辑工具！如果对您有帮助，请给个⭐Star支持！**
+          **感谢使用Hosts文件编辑工具！如果对您有帮助，请给个Star支持！**
         draft: false
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-  # 添加一个简单的测试作业来验证工作流是否运行
+  # 简化的测试作业，避免Unicode问题
   test:
     runs-on: windows-latest
     if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
@@ -130,33 +130,28 @@ jobs:
     - name: Test Python syntax
       run: |
         python -m py_compile main.py
-        Write-Host "✅ Python语法检查通过"
+        Write-Host "Python syntax check passed"
         
-    - name: Test imports
-      run: |
-        python -c "
-        try:
-            import sys
-            import os
-            import re
-            import subprocess
-            print('✅ 标准库导入成功')
-        except ImportError as e:
-            print(f'❌ 标准库导入失败: {e}')
-            sys.exit(1)
-        "
-        
-    - name: Install and test PySide6
+    - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        Write-Host "Dependencies installed successfully"
+        
+    - name: Test basic imports
+      run: |
         python -c "
-        try:
-            from PySide6.QtWidgets import QApplication
-            from PySide6.QtCore import QStringListModel, Qt
-            from PySide6.QtGui import QFont
-            print('✅ PySide6导入成功')
-        except ImportError as e:
-            print(f'❌ PySide6导入失败: {e}')
-            import sys
-            sys.exit(1)
+        import sys
+        import os
+        import re
+        import subprocess
+        print('Standard library imports successful')
+        "
+        
+    - name: Test PySide6 import
+      run: |
+        python -c "
+        from PySide6.QtWidgets import QApplication
+        from PySide6.QtCore import QStringListModel, Qt
+        from PySide6.QtGui import QFont
+        print('PySide6 imports successful')
         "
