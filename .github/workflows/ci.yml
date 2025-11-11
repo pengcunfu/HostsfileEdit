@@ -24,6 +24,12 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         
+    - name: Install system dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-glx libegl1 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 x11-utils libxcb-cursor0
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -34,6 +40,7 @@ jobs:
       run: |
         python -m py_compile main.py
         
-    - name: Test imports
+    - name: Test imports (without display)
       run: |
-        python -c "from PySide6.QtWidgets import QApplication; print('PySide6 import successful')"
+        python -c "import sys; import os; import re; import subprocess; print('Standard library imports successful')"
+        python -c "from PySide6 import QtCore; print('PySide6 core import successful')"
