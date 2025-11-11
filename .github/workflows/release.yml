@@ -1,0 +1,183 @@
+name: Release Multi-Platform
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+# 设置权限
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            output_name: HostsFileEditor-Windows.exe
+            icon_option: --icon=icon.png
+            platform: Windows
+          - os: ubuntu-latest
+            output_name: HostsFileEditor-Linux
+            icon_option: --icon=icon.png
+            platform: Linux
+          - os: macos-latest
+            output_name: HostsFileEditor-MacOS
+            icon_option: --icon=icon.png
+            platform: MacOS
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+        
+    - name: Build executable with PyInstaller (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        pyinstaller --onefile --windowed --name=HostsFileEditor-Windows ${{ matrix.icon_option }} --add-data "README.md;." main.py
+        
+    - name: Build executable with PyInstaller (Linux/MacOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        pyinstaller --onefile --windowed --name=${{ matrix.output_name }} ${{ matrix.icon_option }} --add-data "README.md:." main.py
+        
+    - name: Test executable exists (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        if (Test-Path "dist/${{ matrix.output_name }}") {
+          Write-Host "Executable created successfully"
+          $file = Get-Item "dist/${{ matrix.output_name }}"
+          Write-Host "File name: $($file.Name)"
+          Write-Host "File size: $([math]::Round($file.Length/1MB, 2)) MB"
+        } else {
+          Write-Error "Executable creation failed"
+          exit 1
+        }
+        
+    - name: Test executable exists (Linux/MacOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        if [ -f "dist/${{ matrix.output_name }}" ]; then
+          echo "Executable created successfully"
+          ls -lh "dist/${{ matrix.output_name }}"
+        else
+          echo "Executable creation failed"
+          exit 1
+        fi
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.output_name }}
+        path: dist/${{ matrix.output_name }}
+        retention-days: 30
+        
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+        
+    - name: Display structure of downloaded files
+      run: ls -R artifacts
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          artifacts/HostsFileEditor-Windows.exe/HostsFileEditor-Windows.exe
+          artifacts/HostsFileEditor-Linux/HostsFileEditor-Linux
+          artifacts/HostsFileEditor-MacOS/HostsFileEditor-MacOS
+        name: Hosts文件编辑工具 ${{ github.ref_name }}
+        body: |
+          ## Hosts文件编辑工具 - ${{ github.ref_name }}
+          
+          ### 📥 下载
+          
+          #### Windows
+          - **文件**: `HostsFileEditor-Windows.exe`
+          - **系统要求**: Windows 7/8/10/11
+          - **运行要求**: **必须以管理员权限运行**
+          - **使用方法**: 右键选择"以管理员身份运行"
+          
+          #### Linux
+          - **文件**: `HostsFileEditor-Linux`
+          - **系统要求**: Ubuntu 18.04+ / Debian 10+ / Fedora 30+
+          - **运行要求**: 需要root权限
+          - **使用方法**: 
+            ```bash
+            chmod +x HostsFileEditor-Linux
+            sudo ./HostsFileEditor-Linux
+            ```
+          
+          #### MacOS
+          - **文件**: `HostsFileEditor-MacOS`
+          - **系统要求**: MacOS 10.14+
+          - **运行要求**: 需要管理员权限
+          - **使用方法**: 
+            ```bash
+            chmod +x HostsFileEditor-MacOS
+            sudo ./HostsFileEditor-MacOS
+            ```
+          
+          ### ✨ 主要功能
+          - 🎨 现代化GUI界面（基于PySide6）
+          - ✏️ 双重编辑模式（文本编辑 + 按条编辑）
+          - 🔒 智能权限检测和安全保护
+          - 🛠️ 便民工具集（文件定位、记事本集成、环境变量）
+          - ✅ IP地址格式验证
+          
+          ### 🔧 技术特性
+          - **PyInstaller打包**: 单文件可执行程序
+          - **跨平台支持**: Windows、Linux、MacOS
+          - **图形界面**: 基于Qt的现代化UI
+          - **安全可靠**: 自动备份和权限检测
+          
+          ### ⚠️ 重要提醒
+          - **必须以管理员/root权限运行**才能修改hosts文件
+          - 首次运行可能被杀毒软件误报，请添加信任
+          - 建议使用前备份原始hosts文件
+          - Windows用户修改后执行 `ipconfig /flushdns` 刷新DNS缓存
+          - Linux/Mac用户修改后执行 `sudo dscacheutil -flushcache` (Mac) 或 `sudo systemd-resolve --flush-caches` (Linux)
+          
+          ### 📝 Hosts文件位置
+          - **Windows**: `C:\Windows\System32\drivers\etc\hosts`
+          - **Linux**: `/etc/hosts`
+          - **MacOS**: `/etc/hosts`
+          
+          ### 🔗 相关链接
+          - **完整源码**: [GitHub仓库](https://github.com/${{ github.repository }})
+          - **使用文档**: [项目README](https://github.com/${{ github.repository }}#readme)
+          - **问题反馈**: [提交Issue](https://github.com/${{ github.repository }}/issues)
+          
+          ---
+          
+          **感谢使用Hosts文件编辑工具！如果对您有帮助，请给个⭐支持！**
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
