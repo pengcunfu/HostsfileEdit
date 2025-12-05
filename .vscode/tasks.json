@@ -1,0 +1,285 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "运行程序",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "main.py"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "直接运行Python主程序",
+            "icon": {
+                "id": "play",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "安装依赖",
+            "type": "shell",
+            "command": "pip",
+            "args": [
+                "install",
+                "-r",
+                "requirements.txt"
+            ],
+            "problemMatcher": [],
+            "detail": "安装项目依赖包",
+            "icon": {
+                "id": "package",
+                "color": "terminal.ansiBlue"
+            }
+        },
+        {
+            "label": "更新依赖",
+            "type": "shell",
+            "command": "pip",
+            "args": [
+                "install",
+                "--upgrade",
+                "-r",
+                "requirements.txt"
+            ],
+            "problemMatcher": [],
+            "detail": "升级项目依赖包到最新版本",
+            "icon": {
+                "id": "sync",
+                "color": "terminal.ansiCyan"
+            }
+        },
+        {
+            "label": "PyInstaller打包 (单文件)",
+            "type": "shell",
+            "command": "pyinstaller",
+            "args": [
+                "--onefile",
+                "--windowed",
+                "--name=HostsFileEditor",
+                "--icon=resources/icon.png",
+                "--add-data=README.md;.",
+                "main.py"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "使用PyInstaller打包成单个可执行文件",
+            "dependsOn": "安装依赖",
+            "icon": {
+                "id": "package",
+                "color": "terminal.ansiMagenta"
+            }
+        },
+        {
+            "label": "PyInstaller打包 (文件夹)",
+            "type": "shell",
+            "command": "pyinstaller",
+            "args": [
+                "--windowed",
+                "--name=HostsFileEditor",
+                "--icon=resources/icon.png",
+                "--add-data=README.md;.",
+                "main.py"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "使用PyInstaller打包成文件夹模式",
+            "dependsOn": "安装依赖",
+            "icon": {
+                "id": "folder",
+                "color": "terminal.ansiMagenta"
+            }
+        },
+        {
+            "label": "Nuitka编译",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts/build.py"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "使用Nuitka编译项目（性能更好）",
+            "icon": {
+                "id": "build",
+                "color": "terminal.ansiYellow"
+            }
+        },
+        {
+            "label": "版本发布",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts/release.py"
+            ],
+            "problemMatcher": [],
+            "detail": "执行版本发布流程（创建Git标签和触发CI）",
+            "icon": {
+                "id": "rocket",
+                "color": "terminal.ansiGreen"
+            }
+        },
+        {
+            "label": "版本发布 (指定版本)",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts/release.py",
+                "${input:version}"
+            ],
+            "problemMatcher": [],
+            "detail": "发布指定版本号",
+            "icon": {
+                "id": "tag-add",
+                "color": "terminal.ansiGreen"
+            }
+        },
+        {
+            "label": "查看发布版本",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts/release.py",
+                "--list"
+            ],
+            "problemMatcher": [],
+            "detail": "列出所有已发布的版本",
+            "icon": {
+                "id": "tag",
+                "color": "terminal.ansiBlue"
+            }
+        },
+        {
+            "label": "语法检查",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "py_compile",
+                "main.py"
+            ],
+            "problemMatcher": [],
+            "detail": "检查Python代码语法",
+            "icon": {
+                "id": "check",
+                "color": "terminal.ansiGreen"
+            }
+        },
+        {
+            "label": "导入测试",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-c",
+                "import sys; import os; import re; import subprocess; from PySide6 import QtCore, QtWidgets; print('所有依赖导入成功')"
+            ],
+            "problemMatcher": [],
+            "detail": "测试所有依赖包是否可以正常导入",
+            "icon": {
+                "id": "beaker",
+                "color": "terminal.ansiCyan"
+            }
+        },
+        {
+            "label": "清理构建文件",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rf",
+                "build",
+                "dist",
+                "__pycache__",
+                "*.spec"
+            ],
+            "windows": {
+                "command": "rmdir",
+                "args": [
+                    "/s",
+                    "/q",
+                    "build",
+                    "dist",
+                    "__pycache__"
+                ]
+            },
+            "problemMatcher": [],
+            "detail": "清理所有构建生成的临时文件",
+            "icon": {
+                "id": "trash",
+                "color": "terminal.ansiRed"
+            }
+        },
+        {
+            "label": "Git状态",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "status"
+            ],
+            "problemMatcher": [],
+            "detail": "查看Git仓库状态",
+            "icon": {
+                "id": "source-control",
+                "color": "terminal.ansiBlue"
+            }
+        },
+        {
+            "label": "Git提交",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "add",
+                ".",
+                "&&",
+                "git",
+                "commit",
+                "-m",
+                "${input:commitMessage}"
+            ],
+            "problemMatcher": [],
+            "detail": "提交当前更改",
+            "icon": {
+                "id": "git-commit",
+                "color": "terminal.ansiGreen"
+            }
+        },
+        {
+            "label": "Git推送",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "push"
+            ],
+            "problemMatcher": [],
+            "detail": "推送到远程仓库",
+            "icon": {
+                "id": "repo-push",
+                "color": "terminal.ansiMagenta"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "version",
+            "description": "请输入版本号",
+            "default": "1.0.0",
+            "type": "promptString"
+        },
+        {
+            "id": "commitMessage",
+            "description": "请输入提交信息",
+            "default": "更新代码",
+            "type": "promptString"
+        }
+    ]
+}
