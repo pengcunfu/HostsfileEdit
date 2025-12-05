@@ -9,8 +9,8 @@
             免费下载最新版本，开始轻松管理你的hosts文件
           </p>
           <div class="version-info">
-            <span class="version">v2.0.0</span>
-            <span class="release-date">发布于 2025年1月25日</span>
+            <span class="version">v0.0.1</span>
+            <span class="release-date">当前版本</span>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="card-content">
               <div class="file-info">
-                <div class="file-name">HostsFileEditor-v2.0.0.exe</div>
+                <div class="file-name">HostsFileEditor-Windows.exe</div>
                 <div class="file-size">约 25 MB</div>
                 <div class="file-desc">Windows 7/8/10/11 兼容</div>
               </div>
@@ -46,7 +46,7 @@
             </div>
           </div>
 
-          <!-- 源码下载 -->
+          <!-- 源码仓库 -->
           <div class="download-card">
             <div class="card-header">
               <div class="download-icon">
@@ -54,20 +54,20 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
               </div>
-              <h3>源码下载</h3>
-              <p>适合开发者和高级用户</p>
+              <h3>源码仓库</h3>
+              <p>查看完整源代码和开发文档</p>
             </div>
             <div class="card-content">
               <div class="file-info">
-                <div class="file-name">HostsFileEditor-Source.zip</div>
-                <div class="file-size">约 2 MB</div>
-                <div class="file-desc">需要Python 3.7+环境</div>
+                <div class="file-name">GitHub Repository</div>
+                <div class="file-size">开源项目</div>
+                <div class="file-desc">MIT License</div>
               </div>
-              <button class="btn btn-secondary download-btn" @click="downloadFile('source')">
+              <button class="btn btn-secondary download-btn" @click="openGitHub">
                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
-                下载源码
+                访问仓库
               </button>
             </div>
           </div>
@@ -175,35 +175,35 @@
             </div>
           </div>
 
-          <!-- 源码安装 -->
+          <!-- 开发者安装 -->
           <div class="install-method">
             <h3>
               <svg class="method-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
-              从源码安装
+              开发者安装
             </h3>
-            
+
             <div class="code-installation">
               <div class="code-step">
-                <h4>1. 安装Python环境</h4>
-                <p>确保已安装Python 3.7或更高版本</p>
+                <h4>1. 克隆仓库</h4>
+                <p>从GitHub克隆项目到本地</p>
                 <div class="code-block">
-                  <code>python --version</code>
+                  <code>git clone https://github.com/pengcunfu/HostsfileEdit.git</code>
                 </div>
               </div>
-              
+
               <div class="code-step">
                 <h4>2. 安装依赖</h4>
-                <p>解压源码包后，在目录中运行以下命令</p>
+                <p>进入项目目录并安装所需依赖</p>
                 <div class="code-block">
-                  <code>pip install -r requirements.txt</code>
+                  <code>cd HostsfileEdit<br>pip install -r requirements.txt</code>
                 </div>
               </div>
-              
+
               <div class="code-step">
                 <h4>3. 运行程序</h4>
-                <p>以管理员身份打开命令提示符，运行</p>
+                <p>以管理员身份运行主程序</p>
                 <div class="code-block">
                   <code>python main.py</code>
                 </div>
@@ -305,21 +305,31 @@ export default {
   },
   methods: {
     downloadFile(type) {
-      // 模拟下载功能
       if (type === 'exe') {
-        alert('开始下载可执行文件...\n\n注意：这是一个演示网站，实际下载链接需要您提供真实的文件地址。')
-      } else if (type === 'source') {
-        alert('开始下载源码包...\n\n注意：这是一个演示网站，实际下载链接需要您提供真实的文件地址。')
+        // 直接下载可执行文件
+        const downloadUrl = 'https://github.com/pengcunfu/HostsfileEdit/releases/download/v0.0.1/HostsFileEditor-Windows.exe'
+        const link = document.createElement('a')
+        link.href = downloadUrl
+        link.download = 'HostsFileEditor-Windows.exe'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
+    },
+    openGitHub() {
+      // 打开GitHub仓库
+      window.open('https://github.com/pengcunfu/HostsfileEdit', '_blank')
     },
     toggleFaq(index) {
       this.faqs[index].open = !this.faqs[index].open
     },
     openSupport() {
-      alert('联系支持功能\n\n您可以在这里添加实际的支持联系方式，如邮箱、QQ群等。')
+      // 可以链接到GitHub Issues或其他支持页面
+      window.open('https://github.com/pengcunfu/HostsfileEdit/issues', '_blank')
     },
     viewDocs() {
-      alert('查看文档功能\n\n您可以在这里链接到详细的使用文档或帮助页面。')
+      // 可以链接到项目的README或Wiki页面
+      window.open('https://github.com/pengcunfu/HostsfileEdit/blob/main/README.md', '_blank')
     }
   }
 }
