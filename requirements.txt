@@ -1,1 +1,2 @@
-PySide6>=6.0.0
+PySide6==6.10.0
+pywin32
