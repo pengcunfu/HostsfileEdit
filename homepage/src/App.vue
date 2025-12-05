@@ -108,7 +108,7 @@ export default {
 .brand-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #2563eb;
   color: white;
   border-radius: 10px;
   display: flex;

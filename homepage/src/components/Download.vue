@@ -328,7 +328,7 @@ export default {
 <style scoped>
 /* Hero Section */
 .download-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   color: white;
   padding: 80px 0;
 }
@@ -406,7 +406,7 @@ export default {
 .download-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -480,7 +480,7 @@ export default {
 .req-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -572,7 +572,7 @@ export default {
 .step-number {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   color: white;
   border-radius: 10px;
   display: flex;

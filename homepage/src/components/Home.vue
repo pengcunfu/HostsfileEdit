@@ -25,28 +25,7 @@
           </div>
           <div class="hero-image fade-in-up">
             <div class="app-preview">
-              <div class="app-window">
-                <div class="window-header">
-                  <div class="window-controls">
-                    <span class="control close"></span>
-                    <span class="control minimize"></span>
-                    <span class="control maximize"></span>
-                  </div>
-                  <div class="window-title">Host文件修改工具</div>
-                </div>
-                <div class="window-content">
-                  <div class="tab-bar">
-                    <div class="tab active">文本编辑</div>
-                    <div class="tab">按条编辑</div>
-                  </div>
-                  <div class="editor-area">
-                    <div class="code-line"># This is a sample hosts file</div>
-                    <div class="code-line">127.0.0.1 localhost</div>
-                    <div class="code-line">127.0.0.1 dev.mysite.com</div>
-                    <div class="code-line">192.168.1.100 fileserver</div>
-                  </div>
-                </div>
-              </div>
+              <img src="/main.png" alt="Hosts文件编辑工具界面截图" class="app-screenshot" />
             </div>
           </div>
         </div>
@@ -179,7 +158,7 @@ export default {
 <style scoped>
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   color: white;
   padding: 80px 0;
   overflow: hidden;
@@ -216,84 +195,19 @@ export default {
   perspective: 1000px;
 }
 
-.app-window {
-  background: white;
+.app-screenshot {
+  width: 100%;
+  max-width: 600px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  transform: rotateY(-15deg) rotateX(10deg);
+  transform: rotateY(-5deg) rotateX(5deg);
   transition: transform 0.3s ease;
+  border: 4px solid white;
 }
 
-.app-window:hover {
-  transform: rotateY(-10deg) rotateX(5deg);
-}
-
-.window-header {
-  background: #f3f4f6;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.window-controls {
-  display: flex;
-  gap: 8px;
-}
-
-.control {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.control.close { background: #ef4444; }
-.control.minimize { background: #f59e0b; }
-.control.maximize { background: #10b981; }
-
-.window-title {
-  flex: 1;
-  text-align: center;
-  font-weight: 600;
-  color: #374151;
-  font-size: 14px;
-}
-
-.tab-bar {
-  display: flex;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.tab {
-  padding: 12px 24px;
-  font-size: 14px;
-  color: #6b7280;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-}
-
-.tab.active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
-  background: white;
-}
-
-.editor-area {
-  padding: 20px;
-  background: white;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-}
-
-.code-line {
-  padding: 4px 0;
-  color: #374151;
-}
-
-.code-line:first-child {
-  color: #6b7280;
+.app-screenshot:hover {
+  transform: rotateY(-2deg) rotateX(2deg);
 }
 
 /* Features Overview */
@@ -327,7 +241,7 @@ export default {
 .feature-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -356,8 +270,8 @@ export default {
 /* Stats */
 .stats {
   padding: 80px 0;
-  background: linear-gradient(135deg, #1f2937, #111827);
-  color: white;
+  background: #f9fafb;
+  color: #1f2937;
 }
 
 .stats-grid {
@@ -371,15 +285,12 @@ export default {
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 8px;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2563eb;
 }
 
 .stat-label {
   font-size: 18px;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 /* Quick Start */
@@ -403,7 +314,7 @@ export default {
 .step-number {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   color: white;
   border-radius: 12px;
   display: flex;
@@ -429,7 +340,7 @@ export default {
 /* CTA */
 .cta {
   padding: 80px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   color: white;
 }
 

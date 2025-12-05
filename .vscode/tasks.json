@@ -58,6 +58,44 @@
             }
         },
         {
+            "label": "本地运行",
+            "type": "shell",
+            "command": "dist/main.dist/HostsFileEdit.exe",
+            "args": [],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "运行编译后的Hosts文件编辑工具可执行文件",
+            "icon": {
+                "id": "run",
+                "color": "terminal.ansiBlue"
+            }
+        },
+        {
+            "label": "运行站点",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "dev"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/homepage"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "启动Vue开发服务器，运行本地站点",
+            "icon": {
+                "id": "server",
+                "color": "terminal.ansiGreen"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated"
+            }
+        },
+        {
             "label": "版本发布",
             "type": "shell",
             "command": "python",

@@ -277,7 +277,7 @@ export default {
 <style scoped>
 /* Hero Section */
 .features-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
   color: white;
   padding: 80px 0;
 }
@@ -307,7 +307,7 @@ export default {
 .feature-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -384,7 +384,7 @@ export default {
 .tech-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -477,7 +477,7 @@ export default {
 }
 
 .comparison-header {
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: #2563eb;
   color: white;
   font-weight: 600;
   padding: 20px;
