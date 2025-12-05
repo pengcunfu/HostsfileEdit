@@ -134,18 +134,7 @@
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-      <div class="container">
-        <div class="cta-content text-center">
-          <h2>准备好开始了吗？</h2>
-          <p>立即下载hosts文件编辑工具，让域名管理变得简单高效</p>
-          <router-link to="/download" class="btn btn-primary">
-            立即下载
-          </router-link>
-        </div>
-      </div>
-    </section>
+
   </div>
 </template>
 
